@@ -1,20 +1,26 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_REPO_NAME: "myapp"
+    AWS_ACCOUNT_ID: "421010732768"
+    AWS_DEFAULT_REGION: "us-east-1"
+
 phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 421010732768.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:latest -t 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$CODEBUILD_BUILD_ID .
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_ID .
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing Docker image to Amazon ECR...
-      - docker push 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
-      - docker push 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$CODEBUILD_BUILD_ID
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_ID
 artifacts:
   files: imagedefinitions.json
