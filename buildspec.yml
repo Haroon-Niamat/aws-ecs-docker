@@ -33,14 +33,14 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$AWS_CODEBUILD_BUILD_NUMBER .
-      - docker tag 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$AWS_CODEBUILD_BUILD_NUMBER 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
+      - docker build -t 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$CODEBUILD_BUILD_NUMBER .
+      - docker tag 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$CODEBUILD_BUILD_NUMBER 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing Docker image to Amazon ECR...
-      - docker push 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$AWS_CODEBUILD_BUILD_NUMBER
+      - docker push 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:$CODEBUILD_BUILD_NUMBER
       - docker push 421010732768.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
 
 artifacts:
